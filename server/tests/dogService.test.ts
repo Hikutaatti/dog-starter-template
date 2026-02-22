@@ -24,4 +24,15 @@ describe('getRandomDogImage', () => {
 		expect(result.status).toBe('success');
 		expect(fetchMock).toHaveBeenCalledOnce();
 	});
+
+	it('rejects and throws expected error when API response is not ok', async () => {
+		vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+			ok: false,
+			status: 500
+		} as unknown as Response);
+
+		await expect(getRandomDogImage()).rejects.toThrow(
+			'Failed to fetch dog image: Dog API returned status 500'
+		);
+	});
 });
